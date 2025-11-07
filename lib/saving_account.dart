@@ -2,8 +2,8 @@ import 'package:opps_dart/bank_account.dart';
 
 class SavingAccount extends BankAccount {
   final double minBalance = 500;
-  int _withdrawThisMonth = 0;
-  final int _withdrawlLimit = 3;
+  int _withdrawalsThisMonth = 0;
+  final int _withdrawalLimit = 3;
 
   SavingAccount({
     required super.accNumber,
@@ -14,31 +14,31 @@ class SavingAccount extends BankAccount {
   @override
   void deposit(double amount) {
     setBalance = getBalance + amount;
-    print("Deposited Successfully !");
+    print("Deposited Successfully! New Balance: \$${getBalance}");
   }
 
   @override
   void withdraw(double amount) {
-    if (_withdrawThisMonth > _withdrawlLimit) {
+    if (_withdrawalsThisMonth >= _withdrawalLimit) {
       print(
-        "The limit of withdrawl for this month ($_withdrawlLimit) has been reached !!!",
+        "The withdrawal limit for this month ($_withdrawalLimit) has been reached!",
       );
-    } else {
-      if ((getBalance - amount) < minBalance) {
-        print("Minimum balance requirement of \$500 !!!");
-      } else {
-        setBalance = getBalance - amount;
-        print("Amount $amount has been withdrawn !");
-        _withdrawThisMonth++;
-      }
+      return;
     }
+    if ((getBalance - amount) < minBalance) {
+      print("Minimum balance requirement of \$500 must be maintained!");
+      return;
+    }
+    setBalance = getBalance - amount;
+    _withdrawalsThisMonth++;
+    print("Amount \$${amount} withdrawn! Remaining Balance: \$${getBalance}");
   }
 
-  double interestCalculation(double time) {
-    return (getBalance * time * 2) / 100;
+  double interestCalculation(double time, [double rate = 2]) {
+    return (getBalance * time * rate) / 100;
   }
 
-  void resetWithdrawlThisMonth() {
-    _withdrawThisMonth = 0;
+  void resetWithdrawalsThisMonth() {
+    _withdrawalsThisMonth = 0;
   }
 }
